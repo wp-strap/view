@@ -15,6 +15,6 @@ use Exception;
 /**
  * Class ViewException
  */
-class ViewException extends Exception
-{
+class ViewException extends Exception {
+
 }

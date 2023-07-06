@@ -1,0 +1,40 @@
+{
+  "name": "wp-strap/view",
+  "description": "PSR Template loader to use in WordPress plugins.",
+  "license": "BSD-2-Clause",
+  "autoload": {
+    "psr-4": {
+      "WPStrap\\View\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": ["src/"]
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
+    "wp-coding-standards/wpcs": "*",
+    "slevomat/coding-standard": "~8.13.1",
+    "phpcompatibility/phpcompatibility-wp": "*",
+    "phpcsstandards/phpcsutils": "^1.0.6",
+    "phpcsstandards/phpcsextra": "^1.0.4",
+    "php-parallel-lint/php-parallel-lint": "^1.3",
+    "szepeviktor/phpstan-wordpress": "^1.3.0",
+    "php-stubs/wordpress-stubs": "^6.2.1",
+    "roave/security-advisories": "dev-latest",
+    "captainhook/captainhook": "^5.16"
+  },
+  "scripts": {
+    "install:captainhook": "vendor/bin/captainhook install",
+    "analyze": "@php ./vendor/bin/phpstan analyze",
+    "standards:check": "./vendor/bin/phpcs --standard=./phpcs.xml",
+    "syntax:check": "composer exec -- parallel-lint src/"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "require": {
+    "psr/container": "^2.0"
+  }
+}

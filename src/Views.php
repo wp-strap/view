@@ -22,103 +22,104 @@ use RuntimeException;
  * @method static ViewInterface render(string ...$paths)
  * @method static ViewInterface args(array $args)
  */
-class Views {
+class Views
+{
+    /**
+     * The View.
+     *
+     * @var ViewInterface
+     */
+    protected static ViewInterface $view;
 
-	/**
-	 * The View.
-	 *
-	 * @var ViewInterface
-	 */
-	protected static ViewInterface $view;
+    /**
+     * PSR Container.
+     *
+     * @var ContainerInterface
+     */
+    protected static ContainerInterface $container;
 
-	/**
-	 * PSR Container.
-	 *
-	 * @var ContainerInterface
-	 */
-	protected static ContainerInterface $container;
+    /**
+     * Handle dynamic, static calls to the object.
+     *
+     * @param string $method
+     * @param array<string|int, mixed> $args
+     *
+     * @return mixed
+     *
+     * @throws RuntimeException
+     */
+    public static function __callStatic(string $method, array $args)
+    {
+        $instance = static::resolveInstance();
 
-	/**
-	 * Handle dynamic, static calls to the object.
-	 *
-	 * @param string $method
-	 * @param array<string|int, mixed> $args
-	 *
-	 * @return mixed
-	 *
-	 * @throws RuntimeException
-	 */
-	public static function __callStatic( string $method, array $args) {
-		$instance = static::resolveInstance();
+        if (! isset($instance)) {
+            throw new RuntimeException('[Views] View service could not be resolved.');
+        }
 
-		if (!isset($instance)) {
-			throw new RuntimeException('[Views] View service could not be resolved.');
-		}
+        return $instance->{$method}(...$args);
+    }
 
-		return $instance->{$method}(...$args);
-	}
+    /**
+     * Resolve the facade instance.
+     *
+     * @return ViewInterface|null
+     */
+    protected static function resolveInstance(): ?ViewInterface
+    {
+        if (! isset(static::$view) && ! isset(static::$container)) {
+            static::$view = new ViewService();
+        }
 
-	/**
-	 * Resolve the facade instance.
-	 *
-	 * @return ViewInterface|null
-	 */
-	protected static function resolveInstance(): ?ViewInterface {
-		if (!isset(static::$view) && !isset(static::$container)) {
-			static::$view = new ViewService();
-		}
+        return static::$view;
+    }
 
-		return static::$view;
-	}
+    /**
+     * Set facade(s).
+     *
+     * @param ViewInterface ...$instances
+     *
+     * @return void
+     */
+    public static function setFacade(...$instances)
+    {
+        foreach ($instances as $instance) {
+            if ($instance instanceof ViewInterface) {
+                static::$view = $instance;
+            }
+        }
+    }
 
-	/**
-	 * Set facade(s).
-	 *
-	 * @param ViewInterface ...$instances
-	 *
-	 * @return void
-	 */
-	public static function setFacade( ...$instances) {
-		foreach ($instances as $instance) {
-			if ($instance instanceof ViewInterface) {
-				static::$view = $instance;
-			}
-		}
-	}
+    /**
+     * Set facade accessor.
+     *
+     * @param ContainerInterface $container
+     *
+     * @return void
+     */
+    public static function setFacadeAccessor(ContainerInterface $container)
+    {
+        static::$container = $container;
 
-	/**
-	 * Set facade accessor.
-	 *
-	 * @param ContainerInterface $container
-	 *
-	 * @return void
-	 */
-	public static function setFacadeAccessor( ContainerInterface $container) {
-		static::$container = $container;
+        if (static::$container->has(ViewInterface::class)) {
+            static::setFacade(static::resolveFacadeAccessor(ViewInterface::class));
+        }
+    }
 
-		if (static::$container->has(ViewInterface::class)) {
-			static::setFacade(static::resolveFacadeAccessor(ViewInterface::class));
-		}
-	}
-
-	/**
-	 * Get the registered class from the container.
-	 *
-	 * @param string $id
-	 *
-	 * @return mixed|void
-	 */
-	protected static function resolveFacadeAccessor( string $id) {
-		try {
-			return static::$container->get($id);
-		} catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
-			if (\defined('WP_DEBUG') && \WP_DEBUG) {
-				\wp_die(\esc_html($e->getMessage()));
-			} else {
-				if (\defined('WP_DEBUG_LOG') && \WP_DEBUG_LOG) {
-					\error_log(\esc_html($e->getMessage())); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				}
-			}
-		}
-	}
+    /**
+     * Get the registered class from the container.
+     *
+     * @param string $id
+     *
+     * @return mixed|void
+     */
+    protected static function resolveFacadeAccessor(string $id)
+    {
+        try {
+            return static::$container->get($id);
+        } catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+            if (\defined('WP_DEBUG') && \WP_DEBUG) {
+                \wp_die(\esc_html($e->getMessage()));
+            }
+        }
+    }
 }

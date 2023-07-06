@@ -13,32 +13,19 @@
     <arg name="tab-width" value="4"/>
 
     <!-- Configs -->
-    <config name="minimum_supported_wp_version" value="4.7" />
+    <config name="minimum_supported_wp_version" value="4.7"/>
     <config name="testVersion" value="7.4-"/>
 
-    <!-- Let's also check that everything is properly documented. -->
-    <rule ref="WordPress-Docs"/>
-
-    <rule ref="WordPress.WP.I18n">
-        <properties>
-            <property name="text_domain" type="array">
-                <element value="wp-strap"/>
-            </property>
-        </properties>
-    </rule>
-
-    <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
-        <properties>
-            <property name="prefixes" type="array">
-                <element value="my_prefix"/>
-            </property>
-        </properties>
-    </rule>
+    <!-- Use PSR-12 ruleset: https://www.php-fig.org/psr/psr-12/ -->
+    <rule ref="PSR12"/>
 
     <!-- Check for PHP cross-version compatibility. -->
     <rule ref="PHPCompatibilityWP"/>
+    <rule ref="PHPCompatibility">
+        <exclude-pattern>tests/</exclude-pattern>
+    </rule>
 
-    <!-- Include the WordPress-Extra standard. -->
+    <!-- WordPress -->
     <rule ref="WordPress-Extra">
         <exclude name="Generic.Commenting.DocComment.SpacingAfter" />
         <exclude name="Generic.Files.LineEndings.InvalidEOLChar" />
@@ -53,17 +40,38 @@
         <exclude name="WordPress.Security.ValidatedSanitizedInput.MissingUnslash" />
         <exclude name="WordPress.WP.I18n.NonSingularStringLiteralText" />
         <exclude name="WordPress.WhiteSpace" />
+
+        <!-- In favor of PSR12 rules-->
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed"/>
+        <exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie.BraceOnNewLine"/>
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found"/>
+        <exclude name="Generic.Formatting.SpaceAfterCast.NoSpace"/>
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen"/>
+        <exclude name="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine"/>
     </rule>
-
-
-    <rule ref="WooCommerce-Core">
-        <exclude name="Core.Commenting.CommentTags.AuthorTag" />
-        <exclude name="WordPress.PHP.DontExtract" />
-        <exclude name="Generic.Arrays.DisallowShortArraySyntax" />
-        <exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
+    <rule ref="WordPress.Classes.ClassInstantiation"/>
+    <rule ref="WordPress.CodeAnalysis"/>
+    <rule ref="WordPress.DateTime"/>
+    <rule ref="WordPress.DB"/>
+    <rule ref="WordPress.NamingConventions.ValidHookName"/>
+    <rule ref="WordPress.NamingConventions.ValidPostTypeSlug"/>
+    <rule ref="WordPress.PHP">
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
     </rule>
-
-    <rule ref="PHPCompatibility">
-        <exclude-pattern>tests/</exclude-pattern>
+    <rule ref="WordPress.Security">
+        <exclude name="WordPress.Security.EscapeOutput"/>
+    </rule>
+    <rule ref="WordPress.Utils.I18nTextDomainFixer"/>
+    <rule ref="WordPress.WP">
+        <exclude name="WordPress.WP.TimezoneChange"/>
+    </rule>
+    <!-- Set minimum supported version for deprecated functions. -->
+    <rule ref="WordPress.WP.DeprecatedFunctions">
+        <properties>
+            <property name="minimum_supported_version" value="5.4"/>
+        </properties>
+    </rule>
+    <rule ref="WordPress-Docs">
+        <exclude name="Squiz.Commenting.FunctionComment"/>
     </rule>
 </ruleset>

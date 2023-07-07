@@ -40,6 +40,20 @@ abstract class AbstractView
             \wp_die('[View] No view has been set yet.');
         }
 
+        /**
+         * Execute code for this part.
+         *
+         * @param string $slug View slug.
+         * @param string $domain View domain.
+         * @param array<string|int, mixed> $args View args.
+         */
+        \do_action(
+            "{$this->getHook()}_render_view_{$this->view['slug']}",
+            $this->view['slug'],
+            $this->view['domain'],
+            $this->view['args'] ?? []
+        );
+
         try {
             return $this->getView();
         } catch (ViewException $e) {
@@ -140,11 +154,19 @@ abstract class AbstractView
      */
     protected function getFileNames(): array
     {
+        /**
+         * Allow template choices to be filtered.
+         *
+         * @param array $views Names of view files that should be looked for, for given slug and name.
+         * @param string $slug View slug.
+         * @param string $domain View domain path.
+         * @param array $args View args.
+         */
         return \apply_filters(
             "{$this->getHook()}_render_view",
             [$this->getViewFile()],
             $this->view['slug'],
-            $this->view['domain'] ?? null,
+            $this->view['domain'],
             $this->view['args'] ?? []
         );
     }

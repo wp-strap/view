@@ -58,13 +58,6 @@ class ViewService extends AbstractView implements ViewInterface
     protected string $locate;
 
     /**
-     * Global view args.
-     *
-     * @var array<string|int, mixed>
-     */
-    protected array $args;
-
-    /**
      * Set configurations.
      *
      * @param array<string, string|array<string|int, string|string[]>> $config
@@ -73,7 +66,7 @@ class ViewService extends AbstractView implements ViewInterface
      */
     public function register(array $config): self
     {
-        foreach (['dir', 'hook', 'folder', 'path', 'entry', 'locate', 'args'] as $key) {
+        foreach (['dir', 'hook', 'folder', 'path', 'entry', 'locate'] as $key) {
             if (isset($config[$key])) {
                 $this->{$key} = \is_string($config[$key]) ? \untrailingslashit($config[$key]) : $config[$key];
             }
@@ -92,7 +85,10 @@ class ViewService extends AbstractView implements ViewInterface
     public function render(string ...$paths): self
     {
         if (empty($paths[1])) {
-            $this->view = ['slug' => $paths[0]];
+            $this->view = [
+                'domain' => null,
+                'slug'   => $paths[0]
+            ];
         } else {
             $this->view = [
                 'domain' => $paths[0],
@@ -116,9 +112,28 @@ class ViewService extends AbstractView implements ViewInterface
             \wp_die('[View] args() shouldn\'t be called before render().');
         }
 
-        $this->view['args'] = isset($this->args) ? \array_merge($this->args, $args) : $args;
+        $this->view['args'] = $this->filterArgs($args);
 
         return $this;
+    }
+
+    /**
+     * Filters the args.
+     *
+     * @param array<string|int, mixed> $args
+     *
+     * @return array<string|int, mixed>
+     */
+    protected function filterArgs(array $args): array
+    {
+        /**
+         * Allow view args to be filtered.
+         *
+         * @param array<string|int, mixed> $args View args.
+         * @param string $slug View slug.
+         * @param string $domain View domain path.
+         */
+        return \apply_filters("{$this->getHook()}_view_args", $args, $this->view['slug'], $this->view['domain']);
     }
 
     /**
@@ -142,7 +157,7 @@ class ViewService extends AbstractView implements ViewInterface
      */
     protected function getViewPath(): string
     {
-        return isset($this->view['domain'])
+        return $this->view['domain'] !== null
             ? "{$this->getFolderPath()}{$this->view['domain']}/{$this->getEntry()}/{$this->getFolder()}/"
             : "{$this->getFolderPath()}{$this->getFolder()}/";
     }

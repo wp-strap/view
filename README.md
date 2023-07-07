@@ -13,21 +13,21 @@ The classes follow PSR practices with interfaces, so it can be included trough O
 
 Example with using the facade:
 ```php
-use WPStrap\View\Views;
+use WPStrap\View\View;
 
 // Resolves instance and registers project configurations
-Views::register([
+View::register([
     'dir' => plugin_dir_path(__FILE__), // or get_stylesheet_directory() for themes
 ]);
 
-echo Views::render('my-component')->args([
+echo View::render('my-component')->args([
     'my-argument' => 'my-value'
 ])
 ```
 
 Example with using the instance
 ```php
-use WPStrap\View\Views;
+use WPStrap\View\View;
 use WPStrap\View\ViewService;
 
 // Instantiates the Asset service and registers project configurations
@@ -43,13 +43,13 @@ echo $views->render('my-component')->args([
 ])
 
 // You can also use the facade based on this instance.
-Views::setFacade($views);
-Views::render('my-second-component');
+View::setFacade($views);
+View::render('my-second-component');
 ```
 
 Example with using instance as function
 ```php
-use WPStrap\View\ViewsInterface;
+use WPStrap\View\ViewInterface;
 use WPStrap\View\ViewService;
 
 function views(): ViewsInterface {
@@ -72,8 +72,8 @@ echo views()->render('my-component')->args([
 Example with using the League Container
 ```php
 use League\Container\Container;
-use WPStrap\View\Assets;
-use WPStrap\View\ViewsInterface;
+use WPStrap\View\View;
+use WPStrap\View\ViewInterface;
 use WPStrap\View\ViewService;
 
 $container = new Container();
@@ -88,8 +88,8 @@ echo $views->render('my-component')->args([
 ])
 
 // You can also set a PSR container as facade accessor
-Views::setFacadeAccessor($container);
-Views::render('my-second-component');
+View::setFacadeAccessor($container);
+View::render('my-second-component');
 ```
 
 ### Base settings

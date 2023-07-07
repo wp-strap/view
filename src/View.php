@@ -16,13 +16,13 @@ use Psr\Container\NotFoundExceptionInterface;
 use RuntimeException;
 
 /**
- * Class Views
+ * Class View
  *
  * @method static ViewInterface register(array $config)
  * @method static ViewInterface render(string ...$paths)
  * @method static ViewInterface args(array $args)
  */
-class Views
+class View
 {
     /**
      * The View.

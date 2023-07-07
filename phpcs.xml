@@ -13,7 +13,7 @@
     <arg name="tab-width" value="4"/>
 
     <!-- Configs -->
-    <config name="minimum_supported_wp_version" value="4.7"/>
+    <config name="minimum_supported_wp_version" value="5.4"/>
     <config name="testVersion" value="7.4-"/>
 
     <!-- Use PSR-12 ruleset: https://www.php-fig.org/psr/psr-12/ -->

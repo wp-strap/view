@@ -22,8 +22,8 @@
   "scripts": {
     "install:captainhook": "vendor/bin/captainhook install",
     "analyze": "@php ./vendor/bin/phpstan analyze",
-    "standards:check": "./vendor/bin/phpcs --warning-severity=0 -s --ignore-annotations --extensions=php,html --standard=./phpcs.xml",
-    "standards:fix": "./vendor/bin/phpcbf --warning-severity=0 -s --ignore-annotations --extensions=php,html --standard=./phpcs.xml",
+    "standards:check": "./vendor/bin/phpcs --warning-severity=0 -s --extensions=php,html --standard=./phpcs.xml",
+    "standards:fix": "./vendor/bin/phpcbf --warning-severity=0 -s --extensions=php,html --standard=./phpcs.xml",
     "syntax:check": "composer exec -- parallel-lint src/"
   },
   "config": {

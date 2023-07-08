@@ -3,7 +3,7 @@
 /**
  * Responsible getting and locating the view.
  *
- * @package WPStrap\Libs
+ * @package WPStrap\View
  */
 
 declare(strict_types=1);

@@ -3,7 +3,7 @@
 /**
  * Responsible for setting the view configurations.
  *
- * @package WPStrap\Libs
+ * @package WPStrap\View
  */
 
 declare(strict_types=1);

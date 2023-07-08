@@ -3,7 +3,7 @@
 /**
  * The views' facade
  *
- * @package WPStrap\Libs
+ * @package WPStrap\View
  */
 
 declare(strict_types=1);
